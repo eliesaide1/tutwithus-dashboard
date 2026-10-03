@@ -1,7 +1,10 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
+// Empty in development (the Vite proxy handles /api). In production this is
+// the API origin; Render supplies a bare hostname, so add the scheme if absent.
+const apiOrigin = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
+const baseURL = apiOrigin
+  ? `${/^https?:\/\//.test(apiOrigin) ? apiOrigin : `https://${apiOrigin}`}/api`
   : '/api';
 
 export const api = axios.create({ baseURL, timeout: 20000 });

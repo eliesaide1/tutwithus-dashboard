@@ -16,9 +16,13 @@ export function createApp() {
   app.use(express.json({ limit: '1mb' }));
   app.use(express.urlencoded({ extended: true }));
 
+  // Render's blueprint injects bare hostnames (no scheme), so normalise them.
   const origins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
     .split(',')
-    .map((o) => o.trim());
+    .map((o) => o.trim())
+    .filter(Boolean)
+    .map((o) => (/^https?:\/\//.test(o) ? o : `https://${o}`))
+    .map((o) => o.replace(/\/$/, ''));
   app.use(cors({ origin: origins, credentials: true }));
 
   if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));
