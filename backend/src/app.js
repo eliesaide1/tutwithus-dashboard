@@ -1,4 +1,7 @@
 import express from 'express';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -36,6 +39,31 @@ export function createApp() {
   app.use('/api', rateLimit({ windowMs: 60 * 1000, max: 300, standardHeaders: true, legacyHeaders: false }));
 
   app.use('/api', routes);
+
+  // ---------------------------------------------------------------------
+  // In production the API also serves the built React app, so the whole
+  // product lives on one origin: no CORS, one domain, one TLS certificate.
+  // The build is produced by `npm run build` in ../frontend during deploy.
+  // ---------------------------------------------------------------------
+  const dist = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../../frontend/dist',
+  );
+
+  if (fs.existsSync(path.join(dist, 'index.html'))) {
+    // Hashed asset filenames can be cached hard; index.html never is,
+    // otherwise a deploy would not reach browsers that already have it.
+    app.use(express.static(dist, { index: false, maxAge: '1y' }));
+
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api')) return next();
+      res.set('Cache-Control', 'no-cache');
+      res.sendFile(path.join(dist, 'index.html'));
+    });
+    console.log('[api] serving the web app from frontend/dist');
+  } else {
+    console.log('[api] no frontend build found — running API only');
+  }
 
   app.use(notFound);
   app.use(errorHandler);
