@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-slate-100 text-navy-900 antialiased;
+    /* Respect the iPhone home-indicator / notch. */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  /* 16px inputs stop iOS Safari from zooming on focus. */
+  input, select, textarea { font-size: 16px; }
+  @media (min-width: 640px) {
+    input, select, textarea { font-size: 0.875rem; }
+  }
+}
+
+@layer components {
+  .card { @apply flex flex-col rounded-2xl bg-white shadow-card; }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
+           transition active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary { @apply btn bg-navy-700 text-white hover:bg-navy-800; }
+  .btn-secondary { @apply btn bg-white text-navy-700 ring-1 ring-inset ring-navy-200 hover:bg-navy-50; }
+  .btn-ghost { @apply btn text-navy-600 hover:bg-navy-50; }
+  .btn-danger { @apply btn bg-rose-600 text-white hover:bg-rose-700; }
+  .btn-sm { @apply px-3 py-1.5 text-xs; }
+
+  .input {
+    @apply w-full rounded-xl border-0 bg-white px-3.5 py-2.5 text-sm text-navy-900
+           ring-1 ring-inset ring-slate-300 placeholder:text-slate-400
+           focus:ring-2 focus:ring-inset focus:ring-navy-500 disabled:bg-slate-50;
+  }
+  .label { @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500; }
+
+  .badge {
+    @apply inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+
+  /* The navy band that heads every tab of the original workbook. */
+  .sheet-header {
+    @apply flex flex-wrap items-center gap-3 rounded-t-2xl bg-navy-700 px-4 py-3 text-white sm:px-6;
+  }
+
+  .table-wrap { @apply w-full overflow-x-auto; }
+  .th {
+    @apply whitespace-nowrap bg-navy-600 px-3 py-2.5 text-left text-[11px] font-bold uppercase
+           tracking-wide text-white first:rounded-tl-lg last:rounded-tr-lg;
+  }
+  .td { @apply whitespace-nowrap px-3 py-2.5 text-sm text-navy-800; }
+  /* Row banding, same as the sheet. */
+  .tr-band { @apply even:bg-sky-50 hover:bg-sky-100; }
+
+  .skeleton { @apply animate-pulse rounded-lg bg-slate-200; }
+}
+
+/* Slimmer scrollbars for the wide pipeline table. */
+::-webkit-scrollbar { height: 10px; width: 10px; }
+::-webkit-scrollbar-thumb { @apply rounded-full bg-slate-300; }
+::-webkit-scrollbar-thumb:hover { @apply bg-slate-400; }
+::-webkit-scrollbar-track { @apply bg-transparent; }

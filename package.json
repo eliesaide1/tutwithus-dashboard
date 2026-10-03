@@ -1,0 +1,16 @@
+{
+  "name": "tutwithus-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TutWithUs — Sales & Trial Operations dashboard (React + Express + MongoDB)",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "dev": "node scripts/dev.js",
+    "dev:api": "npm --prefix backend run dev",
+    "dev:web": "npm --prefix frontend run dev",
+    "seed": "npm --prefix backend run seed",
+    "seed:demo": "npm --prefix backend run seed:demo",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix backend start"
+  }
+}
