@@ -80,7 +80,7 @@ export default function DataView({
               {onToggleSelect && (
                 <input
                   type="checkbox"
-                  className="mt-1 h-5 w-5 rounded border-slate-300 text-navy-600 focus:ring-navy-500"
+                  className="mt-1 h-6 w-6 shrink-0 rounded border-slate-300 text-navy-600 focus:ring-navy-500"
                   checked={selected.includes(row[keyField])}
                   onClick={(e) => e.stopPropagation()}
                   onChange={() => onToggleSelect(row[keyField])}

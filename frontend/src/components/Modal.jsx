@@ -46,7 +46,7 @@ export default function Modal({ open, onClose, title, subtitle, children, footer
             <h2 className="truncate text-lg font-bold text-navy-800">{title}</h2>
             {subtitle && <p className="mt-0.5 truncate text-sm text-slate-500">{subtitle}</p>}
           </div>
-          <button type="button" onClick={onClose} className="btn-ghost -mr-2 shrink-0 rounded-full p-2" aria-label="Close">
+          <button type="button" onClick={onClose} className="icon-btn -mr-1 shrink-0 text-navy-600 hover:bg-navy-50" aria-label="Close">
             <IconClose />
           </button>
         </div>

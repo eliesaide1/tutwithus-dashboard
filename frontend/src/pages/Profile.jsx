@@ -162,7 +162,7 @@ export default function Profile() {
           subtitle={`${users?.data?.length || 0} account(s)`}
           bodyClassName="p-0"
           actions={isAdmin && (
-            <button type="button" className="rounded-lg bg-white px-2.5 py-1 text-xs font-semibold text-navy-700 hover:bg-navy-50"
+            <button type="button" className="btn btn-sm bg-white text-xs font-semibold text-navy-700 hover:bg-navy-50"
                     onClick={() => setUserModal({ open: true, user: null })}>
               <IconPlus className="mr-1 inline h-3.5 w-3.5" /> Add
             </button>
@@ -185,7 +185,8 @@ export default function Profile() {
                   <Badge value={u.role} map={ROLE_STYLES} />
                   {!u.active && <Badge value="Inactive" fallback="bg-rose-100 text-rose-700" />}
                   {isAdmin && (
-                    <button type="button" className="btn-ghost btn-sm" onClick={() => setUserModal({ open: true, user: u })}>
+                    <button type="button" className="icon-btn text-navy-600 hover:bg-navy-50" aria-label={`Edit ${u.name}`}
+                            onClick={() => setUserModal({ open: true, user: u })}>
                       <IconUser className="h-4 w-4" />
                     </button>
                   )}

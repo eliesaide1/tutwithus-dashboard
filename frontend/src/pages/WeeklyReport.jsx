@@ -87,12 +87,12 @@ export default function WeeklyReport() {
         actions={
           <>
             <div className="flex items-center gap-1 rounded-xl bg-white/10 p-1">
-              <button type="button" className="rounded-lg p-1.5 text-white hover:bg-white/10"
+              <button type="button" className="icon-btn text-white hover:bg-white/10"
                       onClick={() => setWeek(shiftWeek(d.weekKey, -1))} aria-label="Previous week">
                 <IconChevronLeft className="h-4 w-4" />
               </button>
               <span className="px-1 text-xs font-bold text-white">{d.weekKey}</span>
-              <button type="button" className="rounded-lg p-1.5 text-white hover:bg-white/10"
+              <button type="button" className="icon-btn text-white hover:bg-white/10"
                       onClick={() => setWeek(shiftWeek(d.weekKey, 1))} aria-label="Next week">
                 <IconChevronRight className="h-4 w-4" />
               </button>
@@ -130,11 +130,11 @@ export default function WeeklyReport() {
           className="lg:col-span-2"
           actions={isManager && (
             <div className="flex items-center gap-2">
-              <button type="button" className="btn-sm rounded-lg bg-white/15 px-2.5 py-1 text-xs font-semibold text-white hover:bg-white/25"
+              <button type="button" className="btn btn-sm bg-white/15 text-xs font-semibold text-white hover:bg-white/25"
                       disabled={save.isPending || !dirty} onClick={() => save.mutate('Draft')}>
                 {save.isPending && <Spinner className="h-3 w-3" />} Save
               </button>
-              <button type="button" className="btn-sm rounded-lg bg-white px-2.5 py-1 text-xs font-semibold text-navy-700 hover:bg-navy-50"
+              <button type="button" className="btn btn-sm bg-white text-xs font-semibold text-navy-700 hover:bg-navy-50"
                       disabled={save.isPending} onClick={() => save.mutate('Sent')}>
                 Mark sent
               </button>

@@ -76,7 +76,7 @@ export default function Dashboard() {
                 key={p.value}
                 type="button"
                 onClick={() => setDays(p.value)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                className={`chip justify-center rounded-lg ${
                   days === p.value ? 'bg-white text-navy-700' : 'text-navy-100 hover:bg-white/10'
                 }`}
               >
@@ -153,7 +153,7 @@ export default function Dashboard() {
         <SectionCard
           title="Today's calls"
           subtitle={`${(today?.calls?.length || 0) + (today?.overdueCalls?.length || 0)} action(s)`}
-          actions={<Link to="/followups?view=today" className="text-xs font-semibold text-white/80 hover:text-white">Open board →</Link>}
+          actions={<Link to="/followups?view=today" className="tap-link text-xs font-semibold text-white/80 hover:text-white">Open board →</Link>}
           bodyClassName="p-0"
         >
           {!today?.calls?.length && !today?.overdueCalls?.length ? (
@@ -182,7 +182,7 @@ export default function Dashboard() {
         <SectionCard
           title="Today's trials"
           subtitle={`${today?.trials?.length || 0} session(s)`}
-          actions={<Link to="/trials?view=today" className="text-xs font-semibold text-white/80 hover:text-white">Open trials →</Link>}
+          actions={<Link to="/trials?view=today" className="tap-link text-xs font-semibold text-white/80 hover:text-white">Open trials →</Link>}
           bodyClassName="p-0"
         >
           {!today?.trials?.length ? (

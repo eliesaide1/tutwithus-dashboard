@@ -117,7 +117,7 @@ export default function Layout() {
           <div className="relative flex h-full w-72 max-w-[85%] animate-fade-in flex-col bg-navy-800">
             <div className="flex items-center justify-between px-4 py-5">
               <Brand />
-              <button type="button" onClick={() => setDrawerOpen(false)} className="rounded-lg p-2 text-navy-200 hover:bg-white/10">
+              <button type="button" onClick={() => setDrawerOpen(false)} className="icon-btn text-navy-200 hover:bg-white/10" aria-label="Close menu">
                 <IconClose />
               </button>
             </div>
@@ -132,7 +132,7 @@ export default function Layout() {
         {/* mobile top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-3 bg-navy-800 px-4 py-3 lg:hidden"
                 style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
-          <button type="button" onClick={() => setDrawerOpen(true)} className="rounded-lg p-1.5 text-white hover:bg-white/10" aria-label="Open menu">
+          <button type="button" onClick={() => setDrawerOpen(true)} className="icon-btn -ml-2 text-white hover:bg-white/10" aria-label="Open menu">
             <IconMenu />
           </button>
           <span className="min-w-0 flex-1 truncate text-sm font-bold text-white">{current?.label || 'TutWithUs'}</span>

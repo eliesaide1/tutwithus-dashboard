@@ -89,7 +89,7 @@ export default function Pipeline() {
       ) },
     { key: 'phone', label: 'Phone / Contact',
       render: (r) => r.phone
-        ? <a href={`tel:${r.phone}`} onClick={(e) => e.stopPropagation()} className="text-navy-600 hover:underline">{r.phone}</a>
+        ? <a href={`tel:${r.phone}`} onClick={(e) => e.stopPropagation()} className="tap-link text-navy-600 hover:underline">{r.phone}</a>
         : <span className="text-slate-400">—</span> },
     { key: 'leadSource', label: 'Source' },
     { key: 'gradeLevel', label: 'Grade / Level', render: (r) => r.gradeLevel || '—' },

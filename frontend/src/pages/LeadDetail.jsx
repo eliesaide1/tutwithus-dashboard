@@ -149,7 +149,7 @@ export default function LeadDetail() {
                       }
                       stageMutation.mutate({ pipelineStage: stage });
                     }}
-                    className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                    className={`chip ${
                       stage === lead.pipelineStage
                         ? 'bg-navy-700 text-white'
                         : 'bg-slate-100 text-slate-600 hover:bg-navy-100 hover:text-navy-700'

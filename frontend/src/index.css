@@ -55,6 +55,33 @@
   .tr-band { @apply even:bg-sky-50 hover:bg-sky-100; }
 
   .skeleton { @apply animate-pulse rounded-lg bg-slate-200; }
+
+  /* Pill used for quick-view switching above a list. */
+  .chip {
+    @apply flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition;
+  }
+
+  /* Square icon-only control. Comfortable with a mouse, thumb-sized on touch. */
+  .icon-btn {
+    @apply inline-flex items-center justify-center rounded-lg transition
+           active:scale-95 disabled:cursor-not-allowed disabled:opacity-50;
+    height: 2.25rem;
+    width: 2.25rem;
+  }
+}
+
+/*
+ * Touch devices get Apple's 44px minimum on every interactive control.
+ * Scoped to `pointer: coarse` so mouse users keep the denser layout.
+ */
+@media (pointer: coarse) {
+  .btn { min-height: 44px; }
+  .btn-sm { min-height: 40px; }
+  .input { min-height: 44px; }
+  .icon-btn { height: 44px; width: 44px; }
+  .chip { min-height: 40px; }
+  /* Inline text links that act as buttons need a real hit area. */
+  .tap-link { @apply -my-2 inline-flex items-center py-2; }
 }
 
 /* Slimmer scrollbars for the wide pipeline table. */

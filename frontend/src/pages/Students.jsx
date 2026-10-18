@@ -84,12 +84,12 @@ function EnrollmentRow({ student, enrollment, canWrite, onEdit, onRenew, onRemov
           <button type="button" className="btn-secondary btn-sm" onClick={() => onRenew(enrollment)}>
             <IconMoney className="h-3.5 w-3.5" /> Renew
           </button>
-          <button type="button" className="btn-ghost btn-sm" onClick={() => onEdit(enrollment)} aria-label="Edit subject">
-            <IconEdit className="h-3.5 w-3.5" />
+          <button type="button" className="icon-btn text-navy-600 hover:bg-navy-100" onClick={() => onEdit(enrollment)} aria-label={`Edit ${enrollment.subject}`}>
+            <IconEdit className="h-4 w-4" />
           </button>
           {student.enrollments.length > 1 && (
-            <button type="button" className="btn-ghost btn-sm text-rose-600" onClick={() => onRemove(enrollment)} aria-label="Remove subject">
-              <IconTrash className="h-3.5 w-3.5" />
+            <button type="button" className="icon-btn text-rose-600 hover:bg-rose-50" onClick={() => onRemove(enrollment)} aria-label={`Remove ${enrollment.subject}`}>
+              <IconTrash className="h-4 w-4" />
             </button>
           )}
         </div>
@@ -277,7 +277,7 @@ export default function Students() {
                         <span
                           role="button"
                           tabIndex={0}
-                          className="btn-ghost btn-sm"
+                          className="icon-btn text-navy-600 hover:bg-navy-100"
                           onClick={(e) => { e.stopPropagation(); setPersonForm({ open: true, student }); }}
                           onKeyDown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); setPersonForm({ open: true, student }); } }}
                           aria-label="Edit student"
@@ -288,7 +288,7 @@ export default function Students() {
                           <span
                             role="button"
                             tabIndex={0}
-                            className="btn-ghost btn-sm text-rose-600"
+                            className="icon-btn text-rose-600 hover:bg-rose-50"
                             onClick={(e) => { e.stopPropagation(); setDeleting(student); }}
                             onKeyDown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); setDeleting(student); } }}
                             aria-label="Delete student"

@@ -50,7 +50,7 @@ export default function FilterBar({
               key={v.value}
               type="button"
               onClick={() => onView(v.value)}
-              className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              className={`chip ${
                 activeView === v.value
                   ? 'bg-navy-700 text-white'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
