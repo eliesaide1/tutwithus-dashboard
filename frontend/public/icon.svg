@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="TutWithUs">
+  <title>TutWithUs</title>
+  <!-- mortarboard: the cap body sits under the angled board -->
+  <path d="M20 20.5 L32 26.5 L44 20.5 V26.5 Q32 34.5 20 26.5 Z" fill="#275B88"/>
+  <!-- the board itself -->
+  <path d="M32 9 L51 18 L32 27 L13 18 Z" fill="#275B88"/>
+  <!-- tassel hanging from the left edge -->
+  <path d="M16.5 19.5 V33" stroke="#275B88" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+  <circle cx="16.5" cy="35.5" r="2.4" fill="#275B88"/>
+  <!-- play triangle -->
+  <path d="M23 28 L45 40.5 L23 53 Z" fill="#EEBD46"/>
+</svg>
