@@ -108,7 +108,7 @@ export const getLead = asyncHandler(async (req, res) => {
   const [trials, followups, student, activity] = await Promise.all([
     Trial.find({ lead: lead._id }).sort('-scheduledDate'),
     Followup.find({ lead: lead._id }).sort('-dueDate'),
-    Student.findOne({ lead: lead._id }),
+    Student.findOne({ $or: [{ lead: lead._id }, { 'enrollments.lead': lead._id }] }),
     ActivityLog.find({ entityId: lead._id }).sort('-createdAt').limit(50),
   ]);
 
@@ -183,23 +183,16 @@ export const convertLead = asyncHandler(async (req, res) => {
   const lead = await Lead.findById(req.params.id);
   if (!lead) throw ApiError.notFound('Lead not found');
 
-  const existing = await Student.findOne({ lead: lead._id });
-  if (existing) throw ApiError.conflict('This lead already has an Active Students record');
+  const alreadyConverted = await Student.findOne({ 'enrollments.lead': lead._id });
+  if (alreadyConverted) throw ApiError.conflict('This lead already has an Active Students record');
 
   const body = req.body || {};
   if (!['Paid', 'Partially Paid'].includes(body.paymentStatus || lead.paymentStatus)) {
     throw ApiError.badRequest('Payment must be confirmed (Paid or Partially Paid) before converting');
   }
 
-  const student = new Student({
-    lead: lead._id,
-    leadId: lead.leadId,
-    name: lead.studentName,
-    parentName: lead.parentName,
-    phone: lead.phone,
-    email: lead.email,
-    gradeLevel: lead.gradeLevel,
-    subject: body.subject || lead.subject,
+  const enrollment = {
+    subject: body.subject || lead.subject || 'General',
     tutor: body.tutor || lead.assignedTutor,
     startDate: body.startDate || new Date(),
     packagePlan: body.packagePlan || '',
@@ -209,11 +202,47 @@ export const convertLead = asyncHandler(async (req, res) => {
     paymentStatus: body.paymentStatus || lead.paymentStatus,
     nextSession: body.nextSession,
     renewalDate: body.renewalDate,
-    clientNotes: body.clientNotes || '',
-    createdBy: req.user._id,
-  });
-  student.studentId = await nextId('STU');
-  await student.save();
+    notes: body.clientNotes || '',
+    lead: lead._id,
+    leadId: lead.leadId,
+  };
+
+  // The same person coming back for another subject joins their existing
+  // record rather than becoming a second student.
+  const digits = (lead.phone || '').replace(/\D/g, '');
+  const match = [];
+  if (digits.length >= 7) match.push({ phone: new RegExp(`${digits.slice(-9)}$`) });
+  if (lead.studentName) {
+    match.push({ name: new RegExp(`^${lead.studentName.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') });
+  }
+  let student = match.length ? await Student.findOne({ $or: match }) : null;
+
+  if (student) {
+    const clash = student.enrollments.find(
+      (e) => e.subject.toLowerCase() === enrollment.subject.toLowerCase() && e.status === 'Active',
+    );
+    if (clash) throw ApiError.conflict(`${student.name} (${student.studentId}) already studies ${clash.subject}`);
+    student.enrollments.push(enrollment);
+    student.parentName = student.parentName || lead.parentName;
+    student.email = student.email || lead.email;
+    student.updatedBy = req.user._id;
+    await student.save();
+  } else {
+    student = new Student({
+      lead: lead._id,
+      leadId: lead.leadId,
+      name: lead.studentName,
+      parentName: lead.parentName,
+      phone: lead.phone,
+      email: lead.email,
+      gradeLevel: lead.gradeLevel,
+      clientNotes: body.clientNotes || '',
+      enrollments: [enrollment],
+      createdBy: req.user._id,
+    });
+    student.studentId = await nextId('STU');
+    await student.save();
+  }
 
   const before = lead.toObject();
   lead.pipelineStage = 'Active';
@@ -225,7 +254,7 @@ export const convertLead = asyncHandler(async (req, res) => {
 
   await logActivity({
     entity: 'Lead', doc: lead, action: 'convert', user: req.user, before, fields: TRACKED,
-    summary: `Converted to student ${student.studentId}`,
+    summary: `Converted to student ${student.studentId} (${enrollment.subject})`,
   });
 
   res.status(201).json({ success: true, data: { lead, student } });

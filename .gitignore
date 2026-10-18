@@ -7,3 +7,6 @@ dist
 # local env backups
 .env.bak
 *.env.bak
+
+# migration backups contain client data
+students-backup-*.json

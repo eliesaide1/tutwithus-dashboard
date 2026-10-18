@@ -56,7 +56,18 @@ export const getDashboard = asyncHandler(async (req, res) => {
     Trial.countDocuments({ scheduledDate: { $gte: todayStart, $lte: todayEnd }, sessionStatus: { $ne: 'Cancelled' } }),
     Trial.countDocuments({ scheduledDate: { $gte: todayStart, $lte: next7 }, sessionStatus: 'Scheduled' }),
     Lead.countDocuments({ paymentStatus: { $in: ['Pending', 'Invoice Sent', 'Partially Paid', 'Overdue'] } }),
-    Student.countDocuments({ status: 'Active', $or: [{ renewalStatus: { $in: ['Due Soon', 'In Discussion'] } }, { renewalDate: { $lte: endOfDay(addDays(now, 14)) } }] }),
+    Student.countDocuments({
+      status: 'Active',
+      enrollments: {
+        $elemMatch: {
+          status: 'Active',
+          $or: [
+            { renewalStatus: { $in: ['Due Soon', 'In Discussion'] } },
+            { renewalDate: { $lte: endOfDay(addDays(now, 14)) } },
+          ],
+        },
+      },
+    }),
 
     Lead.countDocuments({ dateReceived: { $gte: periodStart, $lte: todayEnd } }),
     Lead.countDocuments({ dateReceived: { $gte: prevStart, $lte: prevEnd } }),
@@ -78,7 +89,10 @@ export const getDashboard = asyncHandler(async (req, res) => {
       { $group: { _id: '$lossReason', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
     ]),
-    Student.aggregate([{ $group: { _id: null, collected: { $sum: '$amountPaid' } } }]),
+    Student.aggregate([
+      { $unwind: { path: '$enrollments', preserveNullAndEmptyArrays: true } },
+      { $group: { _id: null, collected: { $sum: '$enrollments.amountPaid' } } },
+    ]),
 
     // 8-week trend of leads vs conversions.
     Lead.aggregate([
@@ -177,7 +191,10 @@ export const getToday = asyncHandler(async (req, res) => {
     Followup.find({ ...scope, dueDate: { $gte: todayStart, $lte: todayEnd }, status: OPEN_ACTION }).sort('priority dueDate').limit(50),
     Followup.find({ ...scope, dueDate: { $lt: todayStart }, status: OPEN_ACTION }).sort('dueDate').limit(50),
     Trial.find({ scheduledDate: { $gte: todayStart, $lte: todayEnd } }).sort('startTime').limit(50),
-    Student.find({ nextSession: { $gte: todayStart, $lte: todayEnd }, status: 'Active' }).sort('nextSession').limit(50),
+    Student.find({
+      status: 'Active',
+      enrollments: { $elemMatch: { nextSession: { $gte: todayStart, $lte: todayEnd } } },
+    }).limit(50),
     Lead.find({
       pipelineStage: { $nin: CLOSED },
       $or: [{ lastContactDate: { $lt: addDays(todayStart, -7) } }, { lastContactDate: null }],

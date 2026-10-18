@@ -9,7 +9,7 @@ export const getLists = asyncHandler(async (_req, res) => {
     Trial.distinct('tutor').then((t) => t.filter(Boolean).sort()),
     Lead.distinct('subject').then((s) => s.filter(Boolean).sort()),
   ]);
-  const studentTutors = await Student.distinct('tutor').then((t) => t.filter(Boolean));
+  const studentTutors = await Student.distinct('enrollments.tutor').then((t) => t.filter(Boolean));
 
   res.json({
     success: true,

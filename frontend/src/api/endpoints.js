@@ -45,11 +45,22 @@ export const followupsApi = {
 export const studentsApi = {
   list: (params) => api.get('/students', { params }).then(unwrap),
   get: (id) => api.get(`/students/${id}`).then(unwrap),
-  create: (payload) => api.post('/students', payload).then(unwrap),
+  create: (payload, { force } = {}) =>
+    api.post('/students', payload, { params: force ? { force: 1 } : {} }).then(unwrap),
   update: (id, payload) => api.patch(`/students/${id}`, payload).then(unwrap),
-  logSession: (id, payload) => api.post(`/students/${id}/log-session`, payload).then(unwrap),
-  renew: (id, payload) => api.post(`/students/${id}/renew`, payload).then(unwrap),
   remove: (id) => api.delete(`/students/${id}`).then(unwrap),
+  merge: (id, sourceId) => api.post(`/students/${id}/merge`, { sourceId }).then(unwrap),
+
+  // One subject a student studies: its own tutor, package and sessions.
+  addEnrollment: (id, payload) => api.post(`/students/${id}/enrollments`, payload).then(unwrap),
+  updateEnrollment: (id, enrollmentId, payload) =>
+    api.patch(`/students/${id}/enrollments/${enrollmentId}`, payload).then(unwrap),
+  removeEnrollment: (id, enrollmentId) =>
+    api.delete(`/students/${id}/enrollments/${enrollmentId}`).then(unwrap),
+  logSession: (id, enrollmentId, payload = {}) =>
+    api.post(`/students/${id}/enrollments/${enrollmentId}/log-session`, payload).then(unwrap),
+  renew: (id, enrollmentId, payload) =>
+    api.post(`/students/${id}/enrollments/${enrollmentId}/renew`, payload).then(unwrap),
 };
 
 export const dashboardApi = {

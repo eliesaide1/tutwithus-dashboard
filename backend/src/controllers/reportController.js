@@ -21,7 +21,8 @@ async function computeSnapshot(weekStart, weekEnd) {
       ]),
       Student.aggregate([
         { $match: { createdAt: range } },
-        { $group: { _id: null, total: { $sum: '$amountPaid' } } },
+        { $unwind: { path: '$enrollments', preserveNullAndEmptyArrays: true } },
+        { $group: { _id: null, total: { $sum: '$enrollments.amountPaid' } } },
       ]),
     ]);
 
